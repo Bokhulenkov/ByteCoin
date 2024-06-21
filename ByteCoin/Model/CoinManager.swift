@@ -10,7 +10,7 @@ import UIKit
 
 protocol CoinManagerDelegate {
     func didFailWithError(error: Error)
-    func didUpdateCurrency()
+    func didUpdateCurrency(_ coinManager: CoinManager, value: Double)
 }
 
 struct CoinManager {
@@ -23,6 +23,7 @@ struct CoinManager {
     
     let currencyArray = ["AUD", "BRL","CAD","CNY","EUR","GBP","HKD","IDR","ILS","INR","JPY","MXN","NOK","NZD","PLN","RON","RUB","SEK","SGD","USD","ZAR"]
     
+//    формируем url
      func fetchCurrency(idCurrency: String) {
         let urlString = "\(baseURL)\(idCurrency)?apikey=\(apiKey)"
         getCoinPrice(for: urlString)
@@ -39,7 +40,7 @@ struct CoinManager {
                 } else {
                     if let safeData = data {
                         if let currency = parseJSON(safeData) {
-                            print(currency)
+                            delegate?.didUpdateCurrency(self, value: currency)
                         }
                     }
                 }

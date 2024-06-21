@@ -51,21 +51,19 @@ extension ViewController: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 //        маркер валюты (rub, euro...)
         let selectedCurrency = coinManager.currencyArray[row]
+        currencyLabel.text = selectedCurrency
         coinManager.fetchCurrency(idCurrency: selectedCurrency)
-        
     }
 }
 
 extension ViewController: CoinManagerDelegate {
-    
-    func didUpdateCurrency() {
-        print("")
+    func didUpdateCurrency(_ coinManager: CoinManager, value: Double) {
+        DispatchQueue.main.async {
+            self.bitcoinLabel.text = String(value)
+        }
     }
     
     func didFailWithError(error: Error) {
         print("We have error: \(error)")
     }
-    
-    
-    
 }
