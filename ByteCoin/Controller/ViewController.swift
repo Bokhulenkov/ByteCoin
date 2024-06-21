@@ -15,12 +15,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var currencyLabel: UILabel!
     @IBOutlet weak var currencyPicker: UIPickerView!
     
-    let coinManager = CoinManager()
+    var coinManager = CoinManager()
     
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        coinManager.delegate = self
         
         currencyPicker.dataSource = self
         currencyPicker.delegate = self
@@ -47,10 +49,23 @@ extension ViewController: UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        
+//        маркер валюты (rub, euro...)
         let selectedCurrency = coinManager.currencyArray[row]
-        coinManager.getCoinPrice(for: selectedCurrency)
+        coinManager.fetchCurrency(idCurrency: selectedCurrency)
+        
     }
+}
+
+extension ViewController: CoinManagerDelegate {
+    
+    func didUpdateCurrency() {
+        print("")
+    }
+    
+    func didFailWithError(error: Error) {
+        print("We have error: \(error)")
+    }
+    
     
     
 }
