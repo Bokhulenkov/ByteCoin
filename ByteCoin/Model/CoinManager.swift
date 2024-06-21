@@ -38,8 +38,9 @@ struct CoinManager {
                     delegate?.didFailWithError(error: error!)
                 } else {
                     if let safeData = data {
-                        let stringData = String(data: safeData, encoding: .utf8)
-                        print(stringData)
+                        if let currency = parseJSON(safeData) {
+                            print(currency)
+                        }
                     }
                 }
             }
@@ -48,8 +49,16 @@ struct CoinManager {
     }
 
     // MARK: - Парсер
-    
-    
-    
+    func parseJSON(_ data: Data) -> Double? {
+        let decoder = JSONDecoder()
+        do {
+            let decoderData = try decoder.decode(CoinData.self, from: data)
+            let lastPrice = decoderData.rate
+            return lastPrice.round(to: 2)
+        } catch {
+            delegate?.didFailWithError(error: error)
+            return nil
+        }
+    }
 }
 
